@@ -304,15 +304,8 @@ class PieSeriesModel extends SeriesModel<PieSeriesOption> {
 
         // Animation type. Valid values: expansion, scale
         animationType: 'expansion',
-
-        animationDuration: 1000,
-
         // Animation type when update. Valid values: transition, expansion
-        animationTypeUpdate: 'transition',
-
-        animationEasingUpdate: 'cubicInOut',
-        animationDurationUpdate: 500,
-        animationEasing: 'cubicInOut'
+        animationTypeUpdate: 'transition'
     };
 
 }

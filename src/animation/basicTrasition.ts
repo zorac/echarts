@@ -22,16 +22,12 @@
 import {
     AnimationOptionMixin,
     AnimationDelayCallbackParam,
-    PayloadAnimationPart,
-    AnimationOption
+    PayloadAnimationPart
 } from '../util/types';
 import { AnimationEasing } from 'zrender/src/animation/easing';
 import Element, { ElementAnimateConfig } from 'zrender/src/Element';
 import Model from '../model/Model';
-import {
-    isObject,
-    retrieve2
-} from 'zrender/src/core/util';
+import { isObject } from 'zrender/src/core/util';
 import Displayable from 'zrender/src/graphic/Displayable';
 import Group from 'zrender/src/graphic/Group';
 import { makeInner } from '../util/model';
@@ -47,7 +43,6 @@ type AnimateOrSetPropsOption = {
     dataIndex?: number;
     cb?: () => void;
     during?: (percent: number) => void;
-    removeOpt?: AnimationOption
     isFrom?: boolean;
 };
 
@@ -55,11 +50,9 @@ type AnimateOrSetPropsOption = {
  * Return null if animation is disabled.
  */
 export function getAnimationConfig(
-    animationType: 'init' | 'update' | 'remove',
+    animationType: 'enter' | 'update' | 'leave',
     animatableModel: Model<AnimationOptionMixin>,
     dataIndex: number,
-    // Extra opts can override the option in animatable model.
-    extraOpts?: Pick<ElementAnimateConfig, 'easing' | 'duration' | 'delay'>,
     // TODO It's only for pictorial bar now.
     extraDelayParams?: unknown
 ): Pick<ElementAnimateConfig, 'easing' | 'duration' | 'delay'> | null {
@@ -73,28 +66,12 @@ export function getAnimationConfig(
     }
     const animationEnabled = animatableModel && animatableModel.isAnimationEnabled();
 
-    const isUpdate = animationType === 'update';
-
     if (animationEnabled) {
-        let duration: number | Function;
-        let easing: AnimationEasing;
-        let delay: number | Function;
-        if (extraOpts) {
-            duration = retrieve2(extraOpts.duration, 200);
-            easing = retrieve2(extraOpts.easing, 'cubicOut');
-            delay = 0;
-        }
-        else {
-            duration = animatableModel.getShallow(
-                isUpdate ? 'animationDurationUpdate' : 'animationDuration'
-            );
-            easing = animatableModel.getShallow(
-                isUpdate ? 'animationEasingUpdate' : 'animationEasing'
-            );
-            delay = animatableModel.getShallow(
-                isUpdate ? 'animationDelayUpdate' : 'animationDelay'
-            );
-        }
+        const animationProp = `${animationType}Animation` as const;
+        const model = animatableModel.getModel(animationProp);
+        let duration: number | Function = model.getShallow('duration');
+        let easing: AnimationEasing = model.getShallow('easing');
+        let delay: number | Function = model.getShallow('delay');
         // animation from payload has highest priority.
         if (animationPayload) {
             animationPayload.duration != null && (duration = animationPayload.duration);
@@ -124,7 +101,7 @@ export function getAnimationConfig(
 }
 
 function animateOrSetProps<Props>(
-    animationType: 'init' | 'update' | 'remove',
+    animationType: 'enter' | 'update' | 'leave',
     el: Element<Props>,
     props: Props,
     animatableModel?: Model<AnimationOptionMixin> & {
@@ -135,7 +112,6 @@ function animateOrSetProps<Props>(
     during?: AnimateOrSetPropsOption['during']
 ) {
     let isFrom = false;
-    let removeOpt: AnimationOption;
     if (typeof dataIndex === 'function') {
         during = cb;
         cb = dataIndex;
@@ -145,22 +121,20 @@ function animateOrSetProps<Props>(
         cb = dataIndex.cb;
         during = dataIndex.during;
         isFrom = dataIndex.isFrom;
-        removeOpt = dataIndex.removeOpt;
         dataIndex = dataIndex.dataIndex;
     }
 
-    const isRemove = (animationType === 'remove');
+    const isRemove = (animationType === 'leave');
 
     if (!isRemove) {
         // Must stop the remove animation.
-        el.stopAnimation('remove');
+        el.stopAnimation('leave');
     }
 
     const animationConfig = getAnimationConfig(
         animationType,
         animatableModel,
         dataIndex as number,
-        isRemove ? (removeOpt || {}) : null,
         (animatableModel && animatableModel.getAnimationDelayParams)
             ? animatableModel.getAnimationDelayParams(el, dataIndex as number)
             : null
@@ -245,7 +219,7 @@ export function initProps<Props>(
     cb?: AnimateOrSetPropsOption['cb'] | AnimateOrSetPropsOption['during'],
     during?: AnimateOrSetPropsOption['during']
 ) {
-    animateOrSetProps('init', el, props, animatableModel, dataIndex, cb, during);
+    animateOrSetProps('enter', el, props, animatableModel, dataIndex, cb, during);
 }
 
 /**
@@ -258,7 +232,7 @@ export function initProps<Props>(
     }
     for (let i = 0; i < el.animators.length; i++) {
         const animator = el.animators[i];
-        if (animator.scope === 'remove') {
+        if (animator.scope === 'leave') {
             return true;
         }
     }
@@ -281,7 +255,7 @@ export function removeElement<Props>(
         return;
     }
 
-    animateOrSetProps('remove', el, props, animatableModel, dataIndex, cb, during);
+    animateOrSetProps('leave', el, props, animatableModel, dataIndex, cb, during);
 }
 
 function fadeOutDisplayable(

@@ -300,11 +300,21 @@ class TreeSeriesModel extends SeriesModel<TreeSeriesOption> {
             show: true
         },
 
-        animationEasing: 'linear',
+        enterAnimation: {
+            duration: 700,
+            easing: 'linear'
+        },
 
-        animationDuration: 700,
+        // Use same duration and easing with update to have more consistent animation.
+        updateAnimation: {
+            duration: 500,
+            easing: 'cubicInOut'
+        },
 
-        animationDurationUpdate: 500
+        leaveAnimation: {
+            duration: 500,
+            easing: 'cubicInOut'
+        }
     };
 }
 

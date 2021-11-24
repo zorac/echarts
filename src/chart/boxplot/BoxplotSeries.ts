@@ -127,7 +127,9 @@ class BoxplotSeriesModel extends SeriesModel<BoxplotSeriesOption> {
             }
         },
 
-        animationDuration: 800
+        enterAnimation: {
+            duration: 800
+        }
     };
 }
 

@@ -271,8 +271,6 @@ class SunburstSeriesModel extends SeriesModel<SunburstSeriesOption> {
 
         // Animation type canbe expansion, scale
         animationType: 'expansion',
-        animationDuration: 1000,
-        animationDurationUpdate: 500,
 
         data: [],
 

@@ -153,8 +153,11 @@ class TooltipModel extends ComponentModel<TooltipOption> {
             axis: 'auto',
 
             animation: 'auto',
-            animationDurationUpdate: 200,
-            animationEasingUpdate: 'exponentialOut',
+
+            updateAnimation: {
+                duration: 200,
+                easing: 'exponentialOut'
+            },
 
             crossStyle: {
                 color: '#999',

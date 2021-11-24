@@ -21,7 +21,7 @@ import {each, isArray, isObject, isTypedArray, defaults} from 'zrender/src/core/
 import compatStyle from './helper/compatStyle';
 import {normalizeToArray} from '../util/model';
 import { Dictionary } from 'zrender/src/core/types';
-import { ECUnitOption } from '../util/types';
+import { AnimationOptionMixin, ECUnitOption } from '../util/types';
 import type { BarSeriesOption } from '../chart/bar/BarSeries';
 import type { PieSeriesOption } from '../chart/pie/PieSeries';
 import { deprecateLog, deprecateReplaceLog } from '../util/log';
@@ -141,6 +141,30 @@ function traverseTree(data: any[], cb: Function) {
     }
 }
 
+function lowerCase<T extends string>(str: T) {
+    return str.toLowerCase() as `${Lowercase<T>}`;
+}
+
+function compatAnimation(animationOpt: AnimationOptionMixin) {
+    if (!animationOpt) {
+        return;
+    }
+    each(['', 'Update'] as const, (animationType) => {
+        each(['Easing', 'Duration', 'Delay'] as const, (animationConfigItem) => {
+            const legacyProp = `animation${animationConfigItem}${animationType}` as const;
+            if (animationOpt[legacyProp] != null) {
+                const animationTypeNew = `${lowerCase(animationType || 'enter')}Animation` as const;
+                animationOpt[animationTypeNew] = animationOpt[animationTypeNew] || {};
+                (animationOpt[animationTypeNew] as any)[lowerCase(animationConfigItem)] = animationOpt[legacyProp];
+
+                if (__DEV__) {
+                    deprecateReplaceLog(legacyProp, `${animationTypeNew}.${lowerCase(animationConfigItem)}`);
+                }
+            }
+        });
+    });
+}
+
 export default function globalBackwardCompat(option: ECUnitOption, isTheme?: boolean) {
     compatStyle(option, isTheme);
 
@@ -251,12 +275,18 @@ export default function globalBackwardCompat(option: ECUnitOption, isTheme?: boo
             }
         }
 
+        // Animation
+        compatAnimation(seriesOpt);
+
         compatLayoutProperties(seriesOpt);
     });
 
     // dataRange has changed to visualMap
     if (option.dataRange) {
         option.visualMap = option.dataRange;
+        if (__DEV__) {
+            deprecateReplaceLog('dataRange', 'visualMap');
+        }
     }
 
     each(COMPATITABLE_COMPONENTS, function (componentName) {
@@ -269,5 +299,22 @@ export default function globalBackwardCompat(option: ECUnitOption, isTheme?: boo
                 compatLayoutProperties(option);
             });
         }
+    });
+
+    // Handling animations.
+    compatAnimation(option);
+    // Axis pointers
+    each(['xAxis', 'yAxis', 'angleAxis', 'radiusAxis', 'tooltip'], componentName => {
+        each(option[componentName], (componentOpt: any) => {
+            compatAnimation(componentOpt && componentOpt.axisPointer);
+        });
+    });
+    each(option.grid, (gridOption: any) => {
+        compatAnimation(gridOption && gridOption.tooltip && gridOption.tooltip.axisPointer);
+    });
+    // Scrollable legend.
+    each(option.legend, compatAnimation);
+    each(option.timeline, (timelineOpt: any) => {
+        compatAnimation(timelineOpt && timelineOpt.checkpointStyle);
     });
 }

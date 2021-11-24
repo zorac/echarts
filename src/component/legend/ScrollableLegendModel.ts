@@ -49,6 +49,12 @@ export interface ScrollableLegendOption extends LegendOption {
     pageIconSize?: number
     pageTextStyle?: LabelOption
 
+    updateAnimation?: {
+        duration?: number
+    }
+    /**
+     * @deprecated Use updateAnimation.duration instead
+     */
     animationDurationUpdate?: number
 }
 
@@ -102,7 +108,9 @@ class ScrollableLegendModel extends LegendModel<ScrollableLegendOption> {
             color: '#333'
         },
 
-        animationDurationUpdate: 800
+        updateAnimation: {
+            duration: 800
+        }
     });
 };
 

@@ -23,6 +23,8 @@ import { keys, filter, each } from 'zrender/src/core/util';
 import { ELEMENT_ANIMATABLE_PROPS } from './customGraphicTransition';
 import { AnimationOption } from '../util/types';
 
+const KEYFRAME_ANIMATOR_SCOPE = 'keyframe';
+
 // Helpers for creating keyframe based animations in custom series and graphic components.
 
 type AnimationKeyframe<T extends Record<string, any>> = T & {
@@ -45,12 +47,16 @@ export function applyKeyframeAnimation<T extends Record<string, any>>(
         return;
     }
 
+    // Stop all keyframe animations applied before.
+    el.stopAnimation(KEYFRAME_ANIMATOR_SCOPE);
+
     function applyKeyframeAnimationOnProp(propName: typeof ELEMENT_ANIMATABLE_PROPS[number]) {
         if (propName && !(el as any)[propName]) {
             return;
         }
 
         const animator = el.animate(propName, animationOpts.loop);
+        animator.scope = KEYFRAME_ANIMATOR_SCOPE;
         each(keyframes, kf => {
             // Stop current animation.
             const animators = el.animators;

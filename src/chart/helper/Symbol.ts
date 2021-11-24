@@ -198,8 +198,8 @@ class Symbol extends graphic.Group {
         }
 
         if (disableAnimation) {
-            // Must stop remove animation manually if don't call initProps or updateProps.
-            this.childAt(0).stopAnimation('remove');
+            // Must stop leave animation manually if don't call initProps or updateProps.
+            this.childAt(0).stopAnimation('leave');
         }
 
         this._seriesModel = seriesModel;
@@ -351,13 +351,11 @@ class Symbol extends graphic.Group {
     }
 
     fadeOut(cb: () => void, opt?: {
-        fadeLabel: boolean,
-        animation?: AnimationOption
+        fadeLabel: boolean
     }) {
         const symbolPath = this.childAt(0) as ECSymbol;
         const seriesModel = this._seriesModel;
         const dataIndex = getECData(this).dataIndex;
-        const animationOpt = opt && opt.animation;
         // Avoid mistaken hover when fading out
         this.silent = symbolPath.silent = true;
         // Not show text when animating
@@ -370,7 +368,6 @@ class Symbol extends graphic.Group {
                     }
                 }, seriesModel, {
                     dataIndex,
-                    removeOpt: animationOpt,
                     cb() {
                         symbolPath.removeTextContent();
                     }
@@ -391,7 +388,7 @@ class Symbol extends graphic.Group {
                 scaleY: 0
             },
             seriesModel,
-            { dataIndex, cb, removeOpt: animationOpt}
+            { dataIndex, cb}
         );
     }
 

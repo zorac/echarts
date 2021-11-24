@@ -876,8 +876,8 @@ function pointerMoveTo(
     }
     else {
         const animationCfg = {
-            duration: pointerModel.get('animationDuration', true),
-            easing: pointerModel.get('animationEasing', true)
+            duration: pointerModel.get(['updateAnimation', 'duration'], true),
+            easing: pointerModel.get(['updateAnimation', 'easing'], true)
         };
         pointer.stopAnimation(null, true);
         pointer.animateTo({

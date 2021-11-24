@@ -195,10 +195,16 @@ function avoidOverlap(
                 }
             }
             if (targetTextWidth < layout.rect.width) {
-                // TODOTODO
-                // layout.text = textContain.truncateText(layout.text, targetTextWidth, layout.font);
-                layout.label.style.width = targetTextWidth;
+                layout.label.setStyle('width', targetTextWidth);
                 if (layout.labelAlignTo === 'edge') {
+                    const oldBackgroundColor = layout.label.style.backgroundColor;
+                    layout.label.style.backgroundColor = null;
+                    const width = layout.label.getBoundingRect().width;
+                    if (width < layout.rect.width) {
+                        layout.label.setStyle('width', width);
+                    }
+                    layout.label.style.backgroundColor = oldBackgroundColor;
+                    targetTextWidth = width;
                     realTextWidth = targetTextWidth;
                     // realTextWidth = textContain.getWidth(layout.text, layout.font);
                 }

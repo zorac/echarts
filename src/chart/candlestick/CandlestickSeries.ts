@@ -139,8 +139,10 @@ class CandlestickSeriesModel extends SeriesModel<CandlestickSeriesOption> {
         progressiveThreshold: 1e4,
         progressiveChunkMode: 'mod',
 
-        animationEasing: 'linear',
-        animationDuration: 300
+        enterAnimation: {
+            easing: 'linear',
+            duration: 300
+        }
     };
 
     /**

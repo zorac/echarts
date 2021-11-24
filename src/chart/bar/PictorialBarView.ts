@@ -30,7 +30,7 @@ import ExtensionAPI from '../../core/ExtensionAPI';
 import SeriesData from '../../data/SeriesData';
 import GlobalModel from '../../model/Global';
 import Model from '../../model/Model';
-import { ColorString, AnimationOptionMixin, ECElement } from '../../util/types';
+import { ColorString, ECElement, AnimationOptionMixin } from '../../util/types';
 import type Cartesian2D from '../../coord/cartesian/Cartesian2D';
 import type Displayable from 'zrender/src/graphic/Displayable';
 import type Axis2D from '../../coord/cartesian/Axis2D';

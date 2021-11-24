@@ -32,7 +32,8 @@ import {
     ColorString,
     CommonTooltipOption,
     CallbackDataParams,
-    ZREasing
+    ZREasing,
+    AnimationOption
 } from '../../util/types';
 import Model from '../../model/Model';
 import GlobalModel, { GlobalModelSetOptionOpts } from '../../model/Global';
@@ -63,8 +64,17 @@ export interface TimelineControlStyle extends ItemStyleOption {
 export interface TimelineCheckpointStyle extends ItemStyleOption,
     SymbolOptionMixin {
     animation?: boolean
+
+    /**
+     * @deprecated Use updateAnimation.duration instead.
+     */
     animationDuration?: number
+    /**
+     * @deprecated Use updateAnimation.easing instead.
+     */
     animationEasing?: ZREasing
+
+    updateAnimation?: Omit<AnimationOption, 'delay'>
 }
 
 interface TimelineLineStyleOption extends LineStyleOption {

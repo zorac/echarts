@@ -105,16 +105,24 @@ export default {
     // Default is source-over
     blendMode: null,
 
+    animation: 'auto',
+
     stateAnimation: {
         duration: 300,
         easing: 'cubicOut'
     },
-
-    animation: 'auto',
-    animationDuration: 1000,
-    animationDurationUpdate: 500,
-    animationEasing: 'cubicInOut',
-    animationEasingUpdate: 'cubicInOut',
+    enterAnimation: {
+        duration: 1000,
+        easing: 'cubicInOut'
+    },
+    updateAnimation: {
+        duration: 500,
+        easing: 'cubicInOut'
+    },
+    leaveAnimation: {
+        duration: 200,
+        easing: 'cubicOut'
+    },
 
     animationThreshold: 2000,
 

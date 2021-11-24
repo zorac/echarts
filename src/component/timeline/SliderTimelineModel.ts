@@ -84,8 +84,10 @@ class SliderTimelineModel extends TimelineModel {
             shadowColor: 'rgba(0, 0, 0, 0.3)',
             // borderColor: 'rgba(194,53,49, 0.5)',
             animation: true,
-            animationDuration: 300,
-            animationEasing: 'quinticInOut'
+            updateAnimation: {
+                duration: 300,
+                easing: 'quinticInOut'
+            }
         },
 
         controlStyle: {
@@ -144,7 +146,7 @@ class SliderTimelineModel extends TimelineModel {
         },
 
         data: []
-    });
+    } as SliderTimelineOption);
 
 }
 

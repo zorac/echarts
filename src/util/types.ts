@@ -814,10 +814,10 @@ export type AnimationDelayCallbackParam = {
 export type AnimationDurationCallback = (idx: number) => number;
 export type AnimationDelayCallback = (idx: number, params?: AnimationDelayCallbackParam) => number;
 
-export interface AnimationOption {
-    duration?: number
+export interface AnimationOption<TCb = never> {
+    duration?: number | (TCb extends never ? never : AnimationDurationCallback)
     easing?: AnimationEasing
-    delay?: number
+    delay?: number | (TCb extends never ? never : AnimationDelayCallback)
     // additive?: boolean
 }
 
@@ -833,34 +833,34 @@ export interface AnimationOptionMixin {
      * Disable animation when the number of elements exceeds the threshold
      */
     animationThreshold?: number
-    // For init animation
+
+    enterAnimation?: AnimationOption<true>
+    updateAnimation?: AnimationOption<true>
+    leaveAnimation?: AnimationOption<true>
+
     /**
-     * Duration of initialize animation.
-     * Can be a callback to specify duration of each element
+     * @deprecated Use enterAnimation.duration instead
      */
     animationDuration?: number | AnimationDurationCallback
     /**
-     * Easing of initialize animation
+     * @deprecated Use enterAnimation.easing instead
      */
     animationEasing?: AnimationEasing
     /**
-     * Delay of initialize animation
-     * Can be a callback to specify duration of each element
+     * @deprecated Use enterAnimation.delay instead
      */
     animationDelay?: number | AnimationDelayCallback
-    // For update animation
+
     /**
-     * Delay of data update animation.
-     * Can be a callback to specify duration of each element
+     * @deprecated Use updateAnimation.duration instead
      */
     animationDurationUpdate?: number | AnimationDurationCallback
     /**
-     * Easing of data update animation.
+     * @deprecated Use updateAnimation.easing instead
      */
     animationEasingUpdate?: AnimationEasing
     /**
-     * Delay of data update animation.
-     * Can be a callback to specify duration of each element
+     * @deprecated Use updateAnimation.delay instead
      */
     animationDelayUpdate?: number | AnimationDelayCallback
 }
@@ -1394,7 +1394,16 @@ export interface CommonAxisPointerOption {
         formatter?: string | ((params: LabelFormatterParams) => string)
     }
     animation?: boolean | 'auto'
+
+    updateAnimation?: Omit<AnimationOption, 'delay'>
+
+    /**
+     * @deprecated Use updateAnimation.duration
+     */
     animationDurationUpdate?: number
+    /**
+     * @deprecated Use updateAnimation.duration
+     */
     animationEasingUpdate?: ZREasing
 
     /**

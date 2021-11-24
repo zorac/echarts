@@ -86,7 +86,7 @@ export interface DataZoomOption extends ComponentOption {
     /**
      * Dispatch action by the fixed rate, avoid frequency.
      * default 100. Do not throttle when use null/undefined.
-     * If animation === true and animationDurationUpdate > 0,
+     * If animation === true and updateAnimation.duration > 0,
      * default value is 100, otherwise 20.
      */
     throttle?: number | null | undefined
@@ -387,10 +387,7 @@ class DataZoomModel<Opts extends DataZoomOption = DataZoomOption> extends Compon
             this._autoThrottle = false;
         }
         if (this._autoThrottle) {
-            const globalOption = this.ecModel.option;
-            this.option.throttle = (
-                globalOption.animation && globalOption.animationDurationUpdate > 0
-            ) ? 100 : 20;
+            this.option.throttle = this.ecModel.isAnimationEnabled() ? 100 : 20;
         }
     }
 

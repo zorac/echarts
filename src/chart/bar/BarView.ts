@@ -386,7 +386,7 @@ class BarView extends ChartView {
                             /**
                              * Set preValue to be value so that no new label
                              * should be started, otherwise, it will take a full
-                             * `animationDurationUpdate` time to finish the
+                             * `updateAnimation.duration` time to finish the
                              * animation, which is not expected.
                              */
                             labelInnerStore.prevValue = labelInnerStore.value;

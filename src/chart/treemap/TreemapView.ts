@@ -359,8 +359,8 @@ class TreemapView extends ChartView {
         seriesModel: TreemapSeriesModel,
         reRoot: ReRoot
     ) {
-        const durationOption = seriesModel.get('animationDurationUpdate');
-        const easingOption = seriesModel.get('animationEasing');
+        const durationOption = seriesModel.get(['updateAnimation', 'duration']);
+        const easingOption = seriesModel.get(['updateAnimation', 'easing']);
         // TODO: do not support function until necessary.
         const duration = (isFunction(durationOption) ? 0 : durationOption) || 0;
         const easing = (isFunction(easingOption) ? null : easingOption) || 'cubicOut';

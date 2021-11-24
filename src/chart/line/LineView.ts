@@ -1063,12 +1063,12 @@ class LineView extends ChartView {
         }
 
         const seriesModel = data.hostModel;
-        let seriesDuration = seriesModel.get('animationDuration');
-        if (typeof seriesDuration === 'function') {
+        let seriesDuration = seriesModel.get(['enterAnimation', 'duration']);
+        if (zrUtil.isFunction(seriesDuration)) {
             seriesDuration = seriesDuration(null);
         }
-        const seriesDalay = seriesModel.get('animationDelay') || 0;
-        const seriesDalayValue = typeof seriesDalay === 'function'
+        const seriesDalay = seriesModel.get(['enterAnimation', 'delay']) || 0;
+        const seriesDalayValue = zrUtil.isFunction(seriesDalay)
             ? seriesDalay(null)
             : seriesDalay;
 
@@ -1113,7 +1113,7 @@ class LineView extends ChartView {
                     ratio = 1 - ratio;
                 }
 
-                const delay = typeof seriesDalay === 'function' ? seriesDalay(idx)
+                const delay = zrUtil.isFunction(seriesDalay) ? seriesDalay(idx)
                     : (seriesDuration * ratio) + seriesDalayValue;
 
                 const symbolPath = el.getSymbolPath();

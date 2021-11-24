@@ -28,7 +28,7 @@ import Model from '../model/Model';
 import { initProps, updateProps } from './basicTrasition';
 import { Path } from '../util/graphic';
 import { warn } from '../util/log';
-import { AnimationOptionMixin, ZRStyleProps } from '../util/types';
+import { ZRStyleProps, AnimationOptionMixin } from '../util/types';
 import { Dictionary } from 'zrender/src/core/types';
 import { PathStyleProps } from 'zrender';
 
@@ -222,7 +222,6 @@ function applyPropsDirectly(
     if (!el.isGroup && styleOpt) {
         if (clearStyle) {
             (el as Displayable).useStyle({});
-
             // When style object changed, how to trade the existing animation?
             // It is probably complicated and not needed to cover all the cases.
             // But still need consider the case:

@@ -599,8 +599,7 @@ function removeNodeEdge(
     node: TreeNode,
     data: SeriesData,
     group: graphic.Group,
-    seriesModel: TreeSeriesModel,
-    removeAnimationOpt: AnimationOption
+    seriesModel: TreeSeriesModel
 ) {
     const virtualRoot = data.tree.root;
     const { source, sourceLayout } = getSourceNode(virtualRoot, node);
@@ -642,8 +641,7 @@ function removeNodeEdge(
             }, seriesModel, {
                 cb() {
                     group.remove(edge);
-                },
-                removeOpt: removeAnimationOpt
+                }
             });
         }
         else if (edgeShape === 'polyline' && seriesModel.get('layout') === 'orthogonal') {
@@ -658,8 +656,7 @@ function removeNodeEdge(
             }, seriesModel, {
                 cb() {
                     group.remove(edge);
-                },
-                removeOpt: removeAnimationOpt
+                }
             });
         }
     }
@@ -689,12 +686,6 @@ function removeNode(
 
     const { sourceLayout } = getSourceNode(virtualRoot, node);
 
-    // Use same duration and easing with update to have more consistent animation.
-    const removeAnimationOpt = {
-        duration: seriesModel.get('animationDurationUpdate') as number,
-        easing: seriesModel.get('animationEasingUpdate')
-    };
-
     graphic.removeElement(symbolEl, {
         x: sourceLayout.x + 1,
         y: sourceLayout.y + 1
@@ -702,21 +693,19 @@ function removeNode(
         cb() {
             group.remove(symbolEl);
             data.setItemGraphicEl(dataIndex, null);
-        },
-        removeOpt: removeAnimationOpt
+        }
     });
 
     symbolEl.fadeOut(null, {
-        fadeLabel: true,
-        animation: removeAnimationOpt
+        fadeLabel: true
     });
 
     // remove edge as parent node
     node.children.forEach(childNode => {
-        removeNodeEdge(childNode, data, group, seriesModel, removeAnimationOpt);
+        removeNodeEdge(childNode, data, group, seriesModel);
     });
     // remove edge as child node
-    removeNodeEdge(node, data, group, seriesModel, removeAnimationOpt);
+    removeNodeEdge(node, data, group, seriesModel);
 }
 
 function getEdgeShape(

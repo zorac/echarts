@@ -237,7 +237,7 @@ function makeAxisPointerModel(
     const tooltipAxisPointerModel = baseTooltipModel.getModel('axisPointer');
     const fields = [
         'type', 'snap', 'lineStyle', 'shadowStyle', 'label',
-        'animation', 'animationDurationUpdate', 'animationEasingUpdate', 'z'
+        'animation', 'updateAnimation', 'z'
     ] as const;
     const volatileOption = {} as Pick<AxisPointerOption, typeof fields[number]>;
 

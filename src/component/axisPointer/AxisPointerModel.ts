@@ -97,7 +97,10 @@ class AxisPointerModel extends ComponentModel<AxisPointerOption> {
         // Do not set 'auto' here, otherwise global animation: false
         // will not effect at this axispointer.
         animation: null,
-        animationDurationUpdate: 200,
+
+        updateAnimation: {
+            duration: 200
+        },
 
         lineStyle: {
             color: '#B9BEC9',

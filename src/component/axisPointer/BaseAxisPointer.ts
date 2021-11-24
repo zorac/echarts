@@ -528,7 +528,7 @@ function updateProps(
         moveAnimation
             ? graphic.updateProps(el, props, animationModel as Model<
                 // Ignore animation property
-                Pick<CommonAxisPointerOption, 'animationDurationUpdate' | 'animationEasingUpdate'>
+                Pick<CommonAxisPointerOption, 'updateAnimation'>
             >)
             : (el.stopAnimation(), el.attr(props));
     }

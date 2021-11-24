@@ -323,9 +323,9 @@ class SankeySeriesModel extends SeriesModel<SankeySeriesOption> {
             }
         },
 
-        animationEasing: 'linear',
-
-        animationDuration: 1000
+        enterAnimation: {
+            easing: 'linear'
+        }
     };
 }
 

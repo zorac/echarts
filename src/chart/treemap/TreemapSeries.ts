@@ -250,9 +250,11 @@ class TreemapSeriesModel extends SeriesModel<TreemapSeriesOption> {
 
         roam: true,
         nodeClick: 'zoomToNode',
-        animation: true,
-        animationDurationUpdate: 900,
-        animationEasing: 'quinticInOut',
+
+        updateAnimation: {
+            duration: 900
+        },
+
         breadcrumb: {
             show: true,
             height: 22,
