@@ -716,7 +716,7 @@ class DataStore {
      * Select data in range. (For optimization of filter)
      * (Manually inline code, support 5 million data filtering in data zoom.)
      */
-    selectRange(range: {[dimIdx: number]: [number, number]}): DataStore {
+    selectRange(range: {[dimIdx: number]: [number, number]}, plusOne: boolean = false): DataStore {
         const newStore = this.clone();
 
         const len = newStore._count;
@@ -748,19 +748,52 @@ class DataStore {
             let idx = 0;
             if (dimSize === 1) {
                 const dimStorage = storeArr[dims[0]];
-                for (let i = 0; i < len; i++) {
-                    const val = dimStorage[i];
-                    // NaN will not be filtered. Consider the case, in line chart, empty
-                    // value indicates the line should be broken. But for the case like
-                    // scatter plot, a data item with empty value will not be rendered,
-                    // but the axis extent may be effected if some other dim of the data
-                    // item has value. Fortunately it is not a significant negative effect.
-                    if (
-                        (val >= min && val <= max) || isNaN(val as any)
-                    ) {
-                        newIndices[offset++] = idx;
+                if (plusOne) {
+                    let minVal = null;
+                    let minIdx = null;
+                    let maxVal = null;
+                    let maxIdx = null;
+                    for (let i = 0; i < len; i++) {
+                        const val = dimStorage[i];
+                        if (val < min) {
+                            if ((minVal == null) || (val > minVal)) {
+                                minVal = val;
+                                minIdx = idx;
+                            }
+                        }
+                        else if (val > max) {
+                            if ((maxVal == null) || (val < maxVal)) {
+                                maxVal = val;
+                                maxIdx = idx;
+                            }
+                        }
+                        else {
+                            newIndices[offset++] = idx;
+                        }
+                        idx++;
                     }
-                    idx++;
+                    if (minIdx !== null) {
+                        newIndices[offset++] = minIdx;
+                    }
+                    if (maxIdx !== null) {
+                        newIndices[offset++] = maxIdx;
+                    }
+                }
+                else {
+                    for (let i = 0; i < len; i++) {
+                        const val = dimStorage[i];
+                        // NaN will not be filtered. Consider the case, in line chart, empty
+                        // value indicates the line should be broken. But for the case like
+                        // scatter plot, a data item with empty value will not be rendered,
+                        // but the axis extent may be effected if some other dim of the data
+                        // item has value. Fortunately it is not a significant negative effect.
+                        if (
+                            (val >= min && val <= max) || isNaN(val as any)
+                        ) {
+                            newIndices[offset++] = idx;
+                        }
+                        idx++;
+                    }
                 }
                 quickFinished = true;
             }

@@ -337,7 +337,7 @@ class AxisProxy {
                         range[dim] = valueWindow;
 
                         // console.time('select');
-                        seriesData.selectRange(range);
+                        seriesData.selectRange(range, filterMode === 'filterPlusOne');
                         // console.timeEnd('select');
                     }
                 });

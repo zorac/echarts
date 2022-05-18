@@ -59,7 +59,7 @@ export interface ToolboxDataZoomFeatureOption extends ToolboxFeatureOption {
     icon?: {[key in IconType]?: string}
     title?: {[key in IconType]?: string}
     // TODO: TYPE Use type in dataZoom
-    filterMode?: 'filter' | 'weakFilter' | 'empty' | 'none'
+    filterMode?: 'filter' | 'weakFilter' | 'filterPlusOne' | 'empty' | 'none'
     // Backward compat: false means 'none'
     xAxisIndex?: ModelFinderIndexQuery
     yAxisIndex?: ModelFinderIndexQuery

@@ -73,6 +73,9 @@ export interface DataZoomOption extends ComponentOption {
      *         is applicable when filtering outliers. For each data item, it will be
      *         filtered only if all  of the relevant dimensions are out of the same
      *         side of the window.
+     * 'filterPlusOne': The same as 'filter', except that if only one dimension is
+     *         being filtered on, the closest date item outside each end of the
+     *         window will not be removed. Useful for line charts with clipping.
      * 'empty': data items which are out of window will be set to empty.
      *         This option is applicable when user should not neglect
      *         that there are some data items out of window.
@@ -81,7 +84,7 @@ export interface DataZoomOption extends ComponentOption {
      * the filtered points when filterModel is set to 'empty', but
      * be connected when set to 'filter'.
      */
-    filterMode?: 'filter' | 'weakFilter' | 'empty' | 'none'
+    filterMode?: 'filter' | 'weakFilter' | 'filterPlusOne' | 'empty' | 'none'
 
     /**
      * Dispatch action by the fixed rate, avoid frequency.

@@ -961,7 +961,7 @@ class SeriesData<
      * Select data in range. (For optimization of filter)
      * (Manually inline code, support 5 million data filtering in data zoom.)
      */
-    selectRange(range: Record<string, [number, number]>): SeriesData {
+    selectRange(range: Record<string, [number, number]>, plusOne: boolean = false): SeriesData {
         'use strict';
 
         const innerRange: Record<number, [number, number]> = {};
@@ -973,7 +973,7 @@ class SeriesData<
             dimIndices.push(dimIdx);
         });
 
-        this._store = this._store.selectRange(innerRange);
+        this._store = this._store.selectRange(innerRange, plusOne);
         return this;
     }
 
